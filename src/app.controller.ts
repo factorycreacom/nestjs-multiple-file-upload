@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   Post,
   UploadedFiles,
   UseInterceptors,
@@ -24,9 +25,14 @@ const fileExtensionFilter = (req, file, callback) => {
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
+  @Get()
+  getHello() {
+    return this.appService.getHello();
+  }
+
   @UseInterceptors(
     FilesInterceptor('files', 20, {
-      fileFilter: fileExtensionFilter,
+      //fileFilter: fileExtensionFilter,
       storage: diskStorage({
         destination: './../uploads',
         filename: function (req, file, cb) {
@@ -35,7 +41,7 @@ export class AppController {
       }),
     }),
   )
-  @Post()
+  @Post('/upload')
   logFiles(@UploadedFiles() images: Array<Express.Multer.File>) {
     console.log(images);
     return;
